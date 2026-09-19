@@ -21,6 +21,20 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    flavorDimensions += "appType"
+
+    productFlavors {
+        create("user") {
+            dimension = "appType"
+            applicationIdSuffix = ".user"
+        }
+
+        create("scanner") {
+            dimension = "appType"
+            applicationIdSuffix = ".scanner"
+        }
+    }
+
     buildTypes {
         release {
             optimization {
