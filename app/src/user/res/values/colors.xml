@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="user_screen_background">#c56762</color>
+    <color name="user_button">#8F3F3B</color>
+    <color name="user_text">#34495E</color>
+    <color name="user_button_disabled">#9A9E9E</color>
+</resources>
