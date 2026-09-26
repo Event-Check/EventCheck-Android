@@ -6,4 +6,13 @@
     <string name="label_email">Email</string>
     <string name="placeholder_email">Enter your email</string>
     <string name="btn_submit">Submit</string>
+    <string name="error_title">Error</string>
+    <string name="success_title">Success</string>
+    <string name="success_message">Successfully registered for the event!</string>
+    <string name="ok">OK</string>
+    <string name="error_invalid_input">Invalid input data. Please check your details.</string>
+    <string name="error_email_registered">This email is already registered.</string>
+    <string name="error_server_fallback">Server error. Please try again later.</string>
+    <string name="error_network">Network error. Please check your internet connection.</string>
+    <string name="error_unexpected">An unexpected error occurred.</string>
 </resources>

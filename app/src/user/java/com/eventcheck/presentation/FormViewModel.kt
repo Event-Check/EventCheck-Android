@@ -5,11 +5,18 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.eventcheck.data.EventDatasource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import java.io.IOException
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
-class FormViewModel @Inject constructor() : ViewModel() {
+class FormViewModel @Inject constructor(
+    private val eventDatasource: EventDatasource
+) : ViewModel() {
 
     private val _name = mutableStateOf("")
     val name: State<String> = _name
@@ -22,6 +29,15 @@ class FormViewModel @Inject constructor() : ViewModel() {
 
     private val _emailError = mutableStateOf<String?>(null)
     val emailError: State<String?> = _emailError
+
+    private val _isLoading = mutableStateOf(false)
+    val isLoading: State<Boolean> = _isLoading
+
+    private val _generalError = mutableStateOf<Int?>(null)
+    val generalError: State<Int?> = _generalError
+
+    private val _isSuccess = mutableStateOf(false)
+    val isSuccess: State<Boolean> = _isSuccess
 
     val isFormValid = derivedStateOf {
         _name.value.isNotBlank() && 
@@ -64,12 +80,40 @@ class FormViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun clearGeneralError() {
+        _generalError.value = null
+    }
+
+    fun resetSuccessState() {
+        _isSuccess.value = false
+    }
+
     fun submitForm() {
         validateName(_name.value)
         validateEmail(_email.value)
 
         if (isFormValid.value) {
-            // Perform form submission logic here
+            viewModelScope.launch {
+                _isLoading.value = true
+                _generalError.value = null
+                _isSuccess.value = false
+                try {
+                    eventDatasource.register(_name.value.trim(), _email.value.trim())
+                    _isSuccess.value = true
+                } catch (e: HttpException) {
+                    _generalError.value = when (e.code()) {
+                        400 -> com.eventcheck.R.string.error_invalid_input
+                        409 -> com.eventcheck.R.string.error_email_registered
+                        else -> com.eventcheck.R.string.error_server_fallback
+                    }
+                } catch (e: IOException) {
+                    _generalError.value = com.eventcheck.R.string.error_network
+                } catch (e: Exception) {
+                    _generalError.value = com.eventcheck.R.string.error_unexpected
+                } finally {
+                    _isLoading.value = false
+                }
+            }
         }
     }
 }

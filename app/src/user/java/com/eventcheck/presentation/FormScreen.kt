@@ -2,9 +2,23 @@ package com.eventcheck.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,19 +47,61 @@ fun FormScreen(
     val nameError by viewModel.nameError
     val emailError by viewModel.emailError
     val isFormValid by viewModel.isFormValid
+    val isLoading by viewModel.isLoading
+    val generalError by viewModel.generalError
+    val isSuccess by viewModel.isSuccess
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        FormScreenContent(
-            modifier = Modifier.padding(innerPadding),
-            name = name,
-            email = email,
-            nameError = nameError,
-            emailError = emailError,
-            isFormValid = isFormValid,
-            onNameChange = viewModel::onNameChange,
-            onEmailChange = viewModel::onEmailChange,
-            onSubmit = viewModel::submitForm
-        )
+        Box(modifier = Modifier.fillMaxSize()) {
+            FormScreenContent(
+                modifier = Modifier.padding(innerPadding),
+                name = name,
+                email = email,
+                nameError = nameError,
+                emailError = emailError,
+                isFormValid = isFormValid && !isLoading,
+                onNameChange = viewModel::onNameChange,
+                onEmailChange = viewModel::onEmailChange,
+                onSubmit = viewModel::submitForm
+            )
+
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = colorResource(R.color.user_button)
+                )
+            }
+
+            generalError?.let {
+                AlertDialog(
+                    onDismissRequest = { viewModel.clearGeneralError() },
+                    title = { Text(text = stringResource(R.string.error_title)) },
+                    text = {
+                        Text(
+                            text = stringResource(
+                                generalError ?: R.string.error_unexpected
+                            )
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { viewModel.clearGeneralError() }) {
+                            Text(stringResource(R.string.ok))
+                        }
+                    })
+            }
+
+            if (isSuccess) {
+                AlertDialog(
+                    onDismissRequest = { viewModel.resetSuccessState() },
+                    title = { Text(text = stringResource(R.string.success_title)) },
+                    text = { Text(text = stringResource(R.string.success_message)) },
+                    confirmButton = {
+                        TextButton(onClick = { viewModel.resetSuccessState() }) {
+                            Text(stringResource(R.string.ok))
+                        }
+                    })
+            }
+        }
     }
 }
 
@@ -194,6 +250,5 @@ private fun Preview() {
         isFormValid = false,
         onNameChange = {},
         onEmailChange = {},
-        onSubmit = {}
-    )
+        onSubmit = {})
 }
