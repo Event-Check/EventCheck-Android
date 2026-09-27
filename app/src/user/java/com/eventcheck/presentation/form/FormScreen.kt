@@ -1,4 +1,4 @@
-package com.eventcheck.presentation
+package com.eventcheck.presentation.form
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,9 +39,19 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.eventcheck.R
 
+/**
+ * Main form composable screen for user event registration.
+ *
+ * Displays input fields for name and email, validates form submission,
+ * collects side-effects from [FormViewModel], and delegates navigation to [onNavigateToQr].
+ *
+ * @param onNavigateToQr Navigation callback triggered when registration succeeds.
+ * @param viewModel Injectable [FormViewModel].
+ */
 @Composable
 fun FormScreen(
-    viewModel: FormViewModel = hiltViewModel()
+    onNavigateToQr: (name: String, email: String, registrationId: String) -> Unit = { _, _, _ -> },
+    viewModel: FormViewModel = hiltViewModel(),
 ) {
     val name by viewModel.name
     val email by viewModel.email
@@ -49,7 +60,18 @@ fun FormScreen(
     val isFormValid by viewModel.isFormValid
     val isLoading by viewModel.isLoading
     val generalError by viewModel.generalError
-    val isSuccess by viewModel.isSuccess
+
+    // Collect one-time UI side-effects from FormViewModel and delegate navigation
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is FormUiEffect.NavigateToQr -> {
+                    onNavigateToQr(effect.name, effect.email, effect.registrationId)
+                    viewModel.resetSuccessState()
+                }
+            }
+        }
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
@@ -62,13 +84,13 @@ fun FormScreen(
                 isFormValid = isFormValid && !isLoading,
                 onNameChange = viewModel::onNameChange,
                 onEmailChange = viewModel::onEmailChange,
-                onSubmit = viewModel::submitForm
+                onSubmit = viewModel::submitForm,
             )
 
             if (isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center),
-                    color = colorResource(R.color.user_button)
+                    color = colorResource(R.color.user_button),
                 )
             }
 
@@ -79,27 +101,16 @@ fun FormScreen(
                     text = {
                         Text(
                             text = stringResource(
-                                generalError ?: R.string.error_unexpected
-                            )
+                                generalError ?: R.string.error_unexpected,
+                            ),
                         )
                     },
                     confirmButton = {
                         TextButton(onClick = { viewModel.clearGeneralError() }) {
                             Text(stringResource(R.string.ok))
                         }
-                    })
-            }
-
-            if (isSuccess) {
-                AlertDialog(
-                    onDismissRequest = { viewModel.resetSuccessState() },
-                    title = { Text(text = stringResource(R.string.success_title)) },
-                    text = { Text(text = stringResource(R.string.success_message)) },
-                    confirmButton = {
-                        TextButton(onClick = { viewModel.resetSuccessState() }) {
-                            Text(stringResource(R.string.ok))
-                        }
-                    })
+                    },
+                )
             }
         }
     }
@@ -115,13 +126,13 @@ private fun FormScreenContent(
     onNameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onSubmit: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(colorResource(R.color.white))
-            .padding(vertical = 24.dp, horizontal = 16.dp)
+            .padding(vertical = 24.dp, horizontal = 16.dp),
     ) {
 
         Text(
@@ -131,9 +142,9 @@ private fun FormScreenContent(
             style = TextStyle(
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Medium,
-                fontFamily = FontFamily(Font(R.font.sf_pro_display_bold))
+                fontFamily = FontFamily(Font(R.font.sf_pro_display_bold)),
             ),
-            modifier = Modifier.padding(bottom = 64.dp)
+            modifier = Modifier.padding(bottom = 64.dp),
         )
 
         Image(
@@ -142,7 +153,7 @@ private fun FormScreenContent(
             modifier = Modifier
                 .padding(bottom = 32.dp)
                 .size(120.dp)
-                .align(alignment = Alignment.CenterHorizontally)
+                .align(alignment = Alignment.CenterHorizontally),
         )
 
         CustomTextField(
@@ -150,7 +161,7 @@ private fun FormScreenContent(
             placeholder = stringResource(R.string.placeholder_name),
             value = name,
             onValueChange = onNameChange,
-            error = nameError
+            error = nameError,
         )
 
         CustomTextField(
@@ -159,7 +170,7 @@ private fun FormScreenContent(
             value = email,
             onValueChange = onEmailChange,
             error = emailError,
-            modifier = Modifier.padding(top = 16.dp)
+            modifier = Modifier.padding(top = 16.dp),
         )
 
         Button(
@@ -174,13 +185,13 @@ private fun FormScreenContent(
                 containerColor = colorResource(R.color.user_button),
                 contentColor = Color.White,
                 disabledContainerColor = colorResource(R.color.user_button_disabled),
-                disabledContentColor = Color.White
-            )
+                disabledContentColor = Color.White,
+            ),
         ) {
             Text(
                 text = stringResource(R.string.btn_submit),
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
     }
@@ -193,7 +204,7 @@ private fun CustomTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    error: String? = null
+    error: String? = null,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         OutlinedTextField(
@@ -214,8 +225,8 @@ private fun CustomTextField(
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
-                        fontFamily = FontFamily(Font(R.font.sf_pro_display_bold))
-                    )
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_bold)),
+                    ),
                 )
             },
             placeholder = {
@@ -223,7 +234,7 @@ private fun CustomTextField(
                     text = placeholder,
                     color = Color.Gray,
                     textAlign = TextAlign.Left,
-                    style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal)
+                    style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal),
                 )
             },
             modifier = Modifier.fillMaxWidth(),
@@ -233,7 +244,7 @@ private fun CustomTextField(
                 text = error,
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp),
             )
         }
     }
@@ -250,5 +261,6 @@ private fun Preview() {
         isFormValid = false,
         onNameChange = {},
         onEmailChange = {},
-        onSubmit = {})
+        onSubmit = {},
+    )
 }
