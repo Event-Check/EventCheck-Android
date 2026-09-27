@@ -64,6 +64,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+    // Navigation 3
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
@@ -83,6 +87,14 @@ dependencies {
 
     //splash api
     implementation(libs.androidx.core.splashscreen)
+
+    //qr genrator
+    implementation(libs.zxing.core)
+
+    //scan qr
+    implementation(libs.bundles.camera)
+    implementation(libs.barcode.scanning)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
