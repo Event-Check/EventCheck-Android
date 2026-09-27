@@ -24,7 +24,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.eventcheck.presentation.FormScreen
+import com.eventcheck.navigation.AppNavHost
 import com.eventcheck.ui.theme.EventCheckTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.time.Duration.Companion.milliseconds
@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                 if (showAnimation) {
                     MainScreen(onAnimationFinished = { showAnimation = false })
                 } else {
-                    FormScreen()
+                    AppNavHost()
                 }
             }
         }
