@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -52,7 +53,7 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(onAnimationFinished: () -> Unit) {
     val context = LocalContext.current
     val window = (context as? Activity)?.window
-    
+
     if (window != null) {
         val controller = WindowInsetsControllerCompat(window, window.decorView)
         DisposableEffect(Unit) {
@@ -65,32 +66,35 @@ fun MainScreen(onAnimationFinished: () -> Unit) {
     }
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
     ) {
         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.splash_user_animation))
 
         val customTypeface = remember {
             ResourcesCompat.getFont(context, R.font.sf_pro_display_bold) ?: Typeface.DEFAULT
         }
-        
+
         // Comprehensive Font Map to map ANY font requested by the Lottie file to our font
         val fontMap = remember(customTypeface) {
             mapOf(
                 "SF Pro Rounded" to customTypeface,
+                "SFProRounded-Regular" to customTypeface,
                 "SF Pro Display" to customTypeface,
                 "SF Pro" to customTypeface,
                 "Audiowide" to customTypeface,
+                "Audiowide Regular" to customTypeface,
                 "sf_pro_display_bold" to customTypeface,
-                "sans-serif" to customTypeface
+                "sans-serif" to customTypeface,
             )
         }
-        
+
         LottieAnimation(
             composition = composition,
             iterations = 1,
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.Fit,
             modifier = Modifier.fillMaxSize(),
-            fontMap = fontMap
+            fontMap = fontMap,
         )
 
         LaunchedEffect(composition) {
