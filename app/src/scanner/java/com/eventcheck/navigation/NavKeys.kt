@@ -1,9 +1,13 @@
 package com.eventcheck.navigation
 
 import androidx.navigation3.runtime.NavKey
+import kotlinx.serialization.Serializable
 
-data object ScanScreen : NavKey
+@Serializable
+data object HomeKey : NavKey
 
-data object StatsScreen : NavKey
+@Serializable
+data object ScanKey : NavKey
 
-data object HomeScreen : NavKey
+@Serializable
+data object StatsKey : NavKey

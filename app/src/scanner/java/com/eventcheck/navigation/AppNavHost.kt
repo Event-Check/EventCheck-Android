@@ -3,16 +3,15 @@ package com.eventcheck.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.eventcheck.presentation.home.HomeScreen
-import com.eventcheck.presentation.scan.ScanQrScreen
+import com.eventcheck.presentation.scan.ScanScreen
 import com.eventcheck.presentation.stats.StatsScreen
 
 @Composable
-fun ScanNavHost(){
-    val backStack = remember { mutableStateListOf<NavKey>(HomeScreen) }
+fun AppNavHost() {
+    val backStack = remember { mutableStateListOf<Any>(HomeKey) }
 
     NavDisplay(
         backStack = backStack,
@@ -22,17 +21,21 @@ fun ScanNavHost(){
             }
         },
         entryProvider = entryProvider {
-            entry<HomeScreen> {
+            entry<HomeKey> {
                 HomeScreen(
-                    onScanClick = { backStack.add(ScanScreen) },
-                    onShowStatsClick = { backStack.add(StatsScreen) }
+                    onNavigateToScan = { backStack.add(ScanKey) },
+                    onNavigateToStats = { backStack.add(StatsKey) },
                 )
             }
-            entry<ScanScreen> {
-                ScanQrScreen()
+            entry<ScanKey> {
+                ScanScreen(
+                    onBack = { backStack.removeLastOrNull() },
+                )
             }
-            entry<StatsScreen> {
-                StatsScreen()
+            entry<StatsKey> {
+                StatsScreen(
+                    onBack = { backStack.removeLastOrNull() },
+                )
             }
         }
     )
