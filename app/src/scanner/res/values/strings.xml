@@ -1,5 +1,31 @@
 <resources>
     <string name="title_activity_main">EventCheck</string>
-    <string name="btn_scan">Scan</string>
-    <string name="btn_show_stats">Show Stats</string>
+    <string name="attendance_rate">Attendance Rate</string>
+    <string name="btn_scan">Scan Ticket</string>
+    <string name="btn_show_stats">View Event Stats</string>
+    <string name="title_scan_screen">Scan QR Pass</string>
+    <string name="subtitle_scan_screen">Point camera at attendee QR code</string>
+    <string name="title_stats_screen">Event Statistics</string>
+    <string name="subtitle_stats_screen">Real-time attendance overview</string>
+    <string name="stat_total_registrations">Total Registrations</string>
+    <string name="stat_verified_registrations">Verified Registrations</string>
+    <string name="stat_checked_in">Checked In</string>
+    <string name="stat_not_checked_in">Not Checked In</string>
+    <string name="camera_permission_required">Camera permission is required to scan QR codes.</string>
+    <string name="btn_grant_permission">Grant Permission</string>
+    <string name="check_in_success">Check-In Successful</string>
+    <string name="check_in_failed">Check-In Failed</string>
+    <string name="btn_scan_next">Scan Next Ticket</string>
+    <string name="btn_retry">Retry</string>
+    <string name="btn_refresh">Refresh Stats</string>
+    <string name="btn_back">Back</string>
+    <string name="error_title">Error</string>
+    <string name="ok">OK</string>
+    <string name="error_invalid_input">Invalid QR code token.</string>
+    <string name="error_server_fallback">Server error occurred. Please try again.</string>
+    <string name="error_network">Network error. Check your internet connection.</string>
+    <string name="error_unexpected">An unexpected error occurred.</string>
+    <string name="label_dialog_name">Name: %1$s</string>
+    <string name="label_dialog_email">Email: %1$s</string>
+    <string name="label_dialog_id">ID: %1$s</string>
 </resources>

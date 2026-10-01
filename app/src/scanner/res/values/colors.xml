@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="scanner_button">#39745c</color>
+    <color name="card_background">#FFFAFAFA</color>
+    <color name="badge_color">#FF3B82F6</color>
+    <color name= "gray">#FFAFAFAF</color>
+    <color name="verified_color">#FF8B5CF6</color>
+    <color name="check_in">#FFF59E0B</color>
+    <color name = "progress_background">#FFF5F7F5</color>
 </resources>
