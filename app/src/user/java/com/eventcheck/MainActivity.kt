@@ -98,8 +98,9 @@ fun MainScreen(onAnimationFinished: () -> Unit) {
         )
 
         LaunchedEffect(composition) {
-            if (composition != null) {
-                kotlinx.coroutines.delay(composition!!.duration.toLong().milliseconds)
+            val comp = composition
+            if (comp != null) {
+                kotlinx.coroutines.delay(comp.duration.toLong().milliseconds)
                 onAnimationFinished()
             }
         }
