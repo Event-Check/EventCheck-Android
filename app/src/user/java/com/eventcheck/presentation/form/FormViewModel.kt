@@ -7,14 +7,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eventcheck.R
+import com.eventcheck.data.DataException
 import com.eventcheck.data.EventDatasource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.io.IOException
-import retrofit2.HttpException
 import javax.inject.Inject
 
 
@@ -127,14 +126,13 @@ class FormViewModel @Inject constructor(
                             registrationId = "", //TODO add registration id
                         )
                     )
-                } catch (e: HttpException) {
-                    _generalError.value = when (e.code()) {
-                        400 -> R.string.error_invalid_input
-                        409 -> R.string.error_email_registered
+                } catch (e: DataException) {
+                    _generalError.value = when (e) {
+                        is DataException.InvalidInput -> R.string.error_invalid_input
+                        is DataException.EmailAlreadyRegistered -> R.string.error_email_registered
+                        is DataException.NetworkError -> R.string.error_network
                         else -> R.string.error_server_fallback
                     }
-                } catch (_: IOException) {
-                    _generalError.value = R.string.error_network
                 } catch (_: Exception) {
                     _generalError.value = R.string.error_unexpected
                 } finally {
