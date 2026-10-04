@@ -28,4 +28,6 @@
     <string name="label_dialog_name">Name: %1$s</string>
     <string name="label_dialog_email">Email: %1$s</string>
     <string name="label_dialog_id">ID: %1$s</string>
+    <string name="empty_stats_title">No Statistics Available</string>
+    <string name="empty_stats_subtitle">Event statistics will appear here once attendees register and check in.</string>
 </resources>
