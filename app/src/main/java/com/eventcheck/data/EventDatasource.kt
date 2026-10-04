@@ -1,5 +1,9 @@
 package com.eventcheck.data
 
+import com.eventcheck.data.request.CheckInRequest
+import com.eventcheck.data.request.RegisterRequest
+import com.eventcheck.data.request.ResendCodeRequest
+import com.eventcheck.data.request.VerifyEmailRequest
 import com.eventcheck.data.response.CheckInResponse
 import com.eventcheck.data.response.RegistrationResponse
 import com.eventcheck.data.response.StatsResponse
@@ -20,20 +24,36 @@ sealed class DataException(override val message: String? = null) : Exception(mes
 class EventDatasource @Inject constructor(
     private val apiService: EventApiService
 ) {
+    suspend fun register(request: RegisterRequest): RegistrationResponse {
+        return handleApiCall { apiService.register(request) }
+    }
+
     suspend fun register(name: String, email: String): RegistrationResponse {
-        return handleApiCall { apiService.register(name, email) }
+        return register(RegisterRequest(name = name, email = email))
+    }
+
+    suspend fun verifyEmail(request: VerifyEmailRequest): VerifyEmailResponse {
+        return handleApiCall { apiService.verifyEmail(request) }
     }
 
     suspend fun verifyEmail(email: String, code: String): VerifyEmailResponse {
-        return handleApiCall { apiService.verifyEmail(email, code) }
+        return verifyEmail(VerifyEmailRequest(email = email, code = code))
+    }
+
+    suspend fun resendVerificationCode(request: ResendCodeRequest): RegistrationResponse {
+        return handleApiCall { apiService.resendVerificationCode(request) }
     }
 
     suspend fun resendVerificationCode(email: String): RegistrationResponse {
-        return handleApiCall { apiService.resendVerificationCode(email) }
+        return resendVerificationCode(ResendCodeRequest(email = email))
+    }
+
+    suspend fun checkIn(request: CheckInRequest): CheckInResponse {
+        return handleApiCall { apiService.checkIn(request) }
     }
 
     suspend fun checkIn(qrToken: String): CheckInResponse {
-        return handleApiCall { apiService.checkIn(qrToken) }
+        return checkIn(CheckInRequest(qrToken = qrToken))
     }
 
     suspend fun getStats(): StatsResponse {
