@@ -19,7 +19,6 @@ The project includes **two Android flavors in the same project**:
 - Generate a unique QR ticket after verification.
 - Display the attendee's event ticket and QR code.
 - Use the QR code for event check-in.
-- Handle loading, success, and error states.
 
 ### 📷 Scanner App
 
@@ -61,20 +60,34 @@ Event Statistics
 
 ## 👤 User App
 
-### Registration & Verification
+### 1. Registration
 
-<p align="center">
-  <img src="screenshots/user/01.jpg" width="220" alt="User App Screenshot 1" />
-  <img src="screenshots/user/02.jpg" width="220" alt="User App Screenshot 2" />
-  <img src="screenshots/user/03.jpg" width="220" alt="User App Screenshot 3" />
-</p>
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="https://github.com/user-attachments/assets/de39c804-a9d0-4183-87ba-e1fff727898c" width="200" alt="User App - Registration 1" />
+    </td>
+    <td align="center" width="33%">
+      <img src="https://github.com/user-attachments/assets/f7d8e8bb-eee4-48ca-8fbf-f925d61d5d88" width="200" alt="User App - Registration 2" />
+    </td>
+    <td align="center" width="33%">
+      <img src="https://github.com/user-attachments/assets/c353dd40-4374-44f2-b272-63971ddabb8a" width="200" alt="User App - Registration 3" />
+    </td>
+  </tr>
+</table>
 
-### QR Ticket
+### 2. Email Verification & QR Ticket
 
-<p align="center">
-  <img src="screenshots/user/04.jpg" width="220" alt="User App Screenshot 4" />
-  <img src="screenshots/user/05.jpg" width="220" alt="User App Screenshot 5" />
-</p>
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="https://github.com/user-attachments/assets/765f9f40-261c-4a2c-9512-ff4ff7cb1561" width="200" alt="User App - Verification" />
+    </td>
+    <td align="center" width="50%">
+      <img src="https://github.com/user-attachments/assets/30f688dd-9d33-4080-9093-44321fa82074" width="200" alt="User App - QR Ticket" />
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -82,46 +95,35 @@ Event Statistics
 
 ### Scanner & Attendance
 
-<p align="center">
-  <img src="screenshots/scanner/01.jpg" width="220" alt="Scanner App Screenshot 1" />
-  <img src="screenshots/scanner/02.jpg" width="220" alt="Scanner App Screenshot 2" />
-  <img src="screenshots/scanner/03.jpg" width="220" alt="Scanner App Screenshot 3" />
-</p>
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="https://github.com/user-attachments/assets/c58cf434-bf6f-457c-a815-44a928c3b81c" width="200" alt="Scanner App - Scan 1" />
+    </td>
+    <td align="center" width="33%">
+      <img src="https://github.com/user-attachments/assets/901f7d15-0a3a-4c3a-95b0-293e93dae1d4" width="200" alt="Scanner App - Scan 2" />
+    </td>
+    <td align="center" width="33%">
+      <img src="https://github.com/user-attachments/assets/108330b4-0ff9-4771-8539-b99bcc89662a" width="200" alt="Scanner App - Statistics" />
+    </td>
+  </tr>
+</table>
 
 ---
 
-# 🏗️ Architecture
+# 📊 Attendance Statistics
 
-The Android application follows a layered architecture with separate presentation and data responsibilities.
+The scanner application provides event statistics such as:
 
-```text
-Presentation
-│
-├── Jetpack Compose UI
-├── ViewModels
-└── UI State
-│
-▼
-Data
-│
-├── Retrofit API
-├── DTOs
-└── Event Data Source
-│
-▼
-Backend API
-│
-├── Registration
-├── Email Verification
-├── QR Check-in
-└── Event Statistics
-```
+- Total registrations.
+- Verified attendees.
+- Checked-in attendees.
+- Remaining attendees.
+- Attendance rate.
 
 ---
 
-# 🛠️ Tech Stack
-
-## Android
+## 🛠️ Android Tech Stack
 
 - Kotlin
 - Jetpack Compose
@@ -135,18 +137,6 @@ Backend API
 - Navigation 3
 - Kotlin Coroutines
 - ViewModel
-
-## Backend
-
-- Kotlin
-- Spring Boot
-- JDK 21
-- PostgreSQL
-- Docker
-- Mailpit
-- REST API
-- QR generation
-- Email verification
 
 ---
 
@@ -163,15 +153,8 @@ This allows the two applications to share common project infrastructure while ke
 
 ---
 
-# 🔌 API Endpoints
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/api/v1/registrations` | Create a registration |
-| `POST` | `/api/v1/registrations/verify` | Verify attendee email |
-| `POST` | `/api/v1/registrations/resend` | Resend verification code |
-| `POST` | `/api/v1/check-in` | Check in attendee using QR token |
-| `GET` | `/api/v1/admin/stats` | Get event statistics |
+## API
+The app talks to the [EventCheck Backend](https://github.com/Event-Check/EventCheck-Backend). See the backend README for the full API documentation.
 
 ---
 
@@ -188,15 +171,21 @@ This allows the two applications to share common project infrastructure while ke
 
 ## Android
 
-Configure the API base URL according to your environment.
+Set the API base URL in `AppModule.kt` according to your environment.
 
-For an Android emulator, if the backend is running locally on your computer, use:
+**Android emulator** (backend running on your computer):
 
 ```text
-http://10.0.2.2:8080/
+http://10.0.2.2:8080/api/v1/
 ```
 
 > `10.0.2.2` allows the Android emulator to access the host machine's `localhost`.
+
+**Physical phone** (same Wi-Fi as your computer):
+
+```text
+http://<your-computer-wifi-ip>:8080/api/v1/
+```
 
 ### Build User App
 
@@ -211,44 +200,3 @@ http://10.0.2.2:8080/
 ```
 
 ---
-
-# 🔐 Backend
-
-The backend is responsible for:
-
-- Registration management.
-- Email verification.
-- QR token generation.
-- Attendee check-in.
-- Duplicate check-in validation.
-- Attendance statistics.
-
-The backend uses PostgreSQL for persistent data and Mailpit for local email testing during development.
-
----
-
-# 📊 Attendance Statistics
-
-The scanner application provides event statistics such as:
-
-- Total registrations.
-- Verified attendees.
-- Checked-in attendees.
-- Remaining attendees.
-- Attendance rate.
-
----
-
-# 🎯 Project Flow
-
-**Register → Verify Email → Receive QR Ticket → Scan QR → Check In → Track Attendance**
-
-EventCheck provides a simple digital workflow for managing event registration and attendance without relying on manual check-in.
-
----
-
-## 👩‍💻 Project
-
-**EventCheck** — Android event registration and QR-based attendance management system.
-
-Built with **Kotlin, Jetpack Compose, Hilt, Retrofit, CameraX, ML Kit, ZXing, Spring Boot, and PostgreSQL**.
