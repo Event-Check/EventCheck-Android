@@ -1,259 +1,254 @@
-EventCheck
-EventCheck is an Android event registration and attendance management
-app designed to make event check-in simple, fast, and reliable.
-The project contains two app experiences in the same Android project:
-User app --- attendees register, verify their email, and receive
-a unique QR event ticket.
-Scanner app --- event staff scan attendee QR codes, check
-attendees in, and view real-time attendance statistics.
-✨ Features
-👤 Attendee App
-Register with name and email.
-Email verification using a one-time verification code.
-Resend verification code when needed.
-Generate a unique QR ticket after successful verification.
-Display attendee information with the generated ticket.
-Show the QR code at the event entrance for check-in.
-Registration and ticket states with loading/error handling.
-📷 Scanner App
-Dedicated scanner experience for event staff.
-Scan attendee QR codes using the device camera.
-Check in attendees using their QR token.
-Prevent duplicate check-ins through backend validation.
-Display the attendee's name and check-in status.
-View event statistics.
-Refresh attendance statistics in real time.
-🔄 User Flow
-``` text
-Enter Details
-     │
-     ▼
-Email Verification
-     │
-     ▼
-QR Event Ticket
-     │
-     ▼
-Show QR at Event Entrance
-     │
-     ▼
-Staff Scans QR
-     │
-     ▼
-Attendance Confirmed
-```
-📱 Screenshots
-User / Attendee App
-Splash Screen
-```{=html}
-<p align="center">
-```
-`<img src="screenshots/user/01_splash.png" width="220" alt="EventCheck user app splash screen">`{=html}
-```{=html}
-</p>
-```
-Registration
-```{=html}
-<p align="center">
-```
-`<img src="screenshots/user/02_registration_empty.png" width="220" alt="Registration screen">`{=html}
-`<img src="screenshots/user/03_registration_filled.png" width="220" alt="Filled registration screen">`{=html}
-```{=html}
-</p>
-```
-Email Verification
-```{=html}
-<p align="center">
-```
-`<img src="screenshots/user/04_email_verification.png" width="220" alt="Email verification screen">`{=html}
-```{=html}
-</p>
-```
-Event Ticket
-```{=html}
-<p align="center">
-```
-`<img src="screenshots/user/05_event_ticket.png" width="220" alt="Event ticket with QR code">`{=html}
-```{=html}
-</p>
-```
-Scanner App
-Scanner Splash Screen
-```{=html}
-<p align="center">
-```
-`<img src="screenshots/scanner/01_splash.png" width="220" alt="EventCheck scanner app splash screen">`{=html}
-```{=html}
-</p>
-```
-Scanner Home
-```{=html}
-<p align="center">
-```
-`<img src="screenshots/scanner/02_scanner_home.png" width="220" alt="Scanner home screen">`{=html}
-```{=html}
-</p>
-```
-Event Statistics
-```{=html}
-<p align="center">
-```
-`<img src="screenshots/scanner/03_event_statistics.png" width="220" alt="Event attendance statistics">`{=html}
-```{=html}
-</p>
-```
-🏗️ Architecture
-The Android client follows a modern layered architecture with a clear
-separation between presentation and data responsibilities.
-``` text
-Presentation
-   │
-   ├── Compose UI
-   ├── ViewModels
-   └── UI State
-   │
-   ▼
-Data
-   │
-   ├── Retrofit API
-   ├── DTOs
-   └── Event Data Source
-   │
-   ▼
-Backend API
-   │
-   ├── Registration
-   ├── Email Verification
-   ├── QR Check-in
-   └── Event Statistics
-```
-The project uses Hilt for dependency injection and Jetpack
-Compose for the UI.
-🛠️ Tech Stack
-Android
-Kotlin
-Jetpack Compose
-Material 3
-Hilt
-Retrofit
-Gson
-CameraX
-ML Kit Barcode Scanning
-ZXing QR Code
-Navigation 3
-Kotlin Coroutines
-ViewModel
-Backend
-Spring Boot
-Kotlin
-JDK 21
-PostgreSQL
-Docker
-Mailpit
-REST API
-Email verification
-QR token generation
-📦 App Flavors
-EventCheck uses two Android flavors within the same project:
-Flavor      Purpose
+# EventCheck 🎟️
+
+EventCheck is an Android event registration and attendance management system built to simplify the complete event check-in process — from attendee registration and email verification to QR-based check-in and attendance statistics.
+
+The project includes **two Android flavors in the same project**:
+
+- **User** — for event attendees.
+- **Scanner** — for event staff and organizers.
+
 ---
-`user`      Attendee registration and QR ticket
-`scanner`   Staff QR scanning and attendance statistics
-This keeps both experiences in one codebase while allowing each build to
-have its own entry point, UI, theme, and functionality.
-🔌 API Overview
-The Android app communicates with the EventCheck backend through REST
-APIs.
-Method   Endpoint                         Purpose
+
+## ✨ Features
+
+### 👤 User App
+
+- Register using name and email.
+- Verify email using a verification code.
+- Resend the verification code.
+- Generate a unique QR ticket after verification.
+- Display the attendee's event ticket and QR code.
+- Use the QR code for event check-in.
+- Handle loading, success, and error states.
+
+### 📷 Scanner App
+
+- Scan attendee QR codes using the device camera.
+- Check attendees in through the backend.
+- Show the attendee's information and check-in result.
+- Prevent duplicate check-ins.
+- View event attendance statistics.
+
 ---
-`POST`   `/api/v1/registrations`          Create a registration
-`POST`   `/api/v1/registrations/verify`   Verify attendee email
-`POST`   `/api/v1/registrations/resend`   Resend verification code
-`POST`   `/api/v1/check-in`               Check in an attendee using QR token
-`GET`    `/api/v1/admin/stats`            Get attendance statistics
-🗄️ Backend Flow
-``` text
+
+## 🔄 How It Works
+
+```text
 Attendee
    │
-   │ Registration
    ▼
-Spring Boot API
+Registration
    │
-   ├── PostgreSQL
+   ▼
+Email Verification
    │
-   └── Email Verification
-          │
-          ▼
-     Verified Attendee
-          │
-          ▼
-      QR Ticket
-          │
-          ▼
-    Scanner App
-          │
-          ▼
-       Check-in
-          │
-          ▼
- Attendance Statistics
+   ▼
+QR Ticket
+   │
+   ▼
+QR Scan at Event
+   │
+   ▼
+Attendance Check-in
+   │
+   ▼
+Event Statistics
 ```
-🚀 Getting Started
-Prerequisites
-Make sure you have:
-Android Studio
-JDK 21
-Android SDK
-A running EventCheck backend
-A PostgreSQL database for the backend
-Docker Desktop if you want to run the backend dependencies through
-Docker
-Android Configuration
-Update the API base URL in the Android project to point to your running
-backend.
-For an Android emulator, a local backend can typically be accessed
-through:
-``` text
+
+---
+
+# 📱 Screenshots
+
+## 👤 User App
+
+### Registration & Verification
+
+<p align="center">
+  <img src="screenshots/user/01.jpg" width="220" alt="User App Screenshot 1" />
+  <img src="screenshots/user/02.jpg" width="220" alt="User App Screenshot 2" />
+  <img src="screenshots/user/03.jpg" width="220" alt="User App Screenshot 3" />
+</p>
+
+### QR Ticket
+
+<p align="center">
+  <img src="screenshots/user/04.jpg" width="220" alt="User App Screenshot 4" />
+  <img src="screenshots/user/05.jpg" width="220" alt="User App Screenshot 5" />
+</p>
+
+---
+
+## 📷 Scanner App
+
+### Scanner & Attendance
+
+<p align="center">
+  <img src="screenshots/scanner/01.jpg" width="220" alt="Scanner App Screenshot 1" />
+  <img src="screenshots/scanner/02.jpg" width="220" alt="Scanner App Screenshot 2" />
+  <img src="screenshots/scanner/03.jpg" width="220" alt="Scanner App Screenshot 3" />
+</p>
+
+---
+
+# 🏗️ Architecture
+
+The Android application follows a layered architecture with separate presentation and data responsibilities.
+
+```text
+Presentation
+│
+├── Jetpack Compose UI
+├── ViewModels
+└── UI State
+│
+▼
+Data
+│
+├── Retrofit API
+├── DTOs
+└── Event Data Source
+│
+▼
+Backend API
+│
+├── Registration
+├── Email Verification
+├── QR Check-in
+└── Event Statistics
+```
+
+---
+
+# 🛠️ Tech Stack
+
+## Android
+
+- Kotlin
+- Jetpack Compose
+- Material 3
+- Hilt
+- Retrofit
+- Gson
+- CameraX
+- ML Kit Barcode Scanning
+- ZXing
+- Navigation 3
+- Kotlin Coroutines
+- ViewModel
+
+## Backend
+
+- Kotlin
+- Spring Boot
+- JDK 21
+- PostgreSQL
+- Docker
+- Mailpit
+- REST API
+- QR generation
+- Email verification
+
+---
+
+# 📦 Android Flavors
+
+Both applications are maintained in the same Android project using product flavors.
+
+| Flavor | Purpose |
+|---|---|
+| `user` | Attendee registration, email verification, and QR ticket |
+| `scanner` | QR scanning, check-in, and attendance statistics |
+
+This allows the two applications to share common project infrastructure while keeping their user experiences separate.
+
+---
+
+# 🔌 API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/v1/registrations` | Create a registration |
+| `POST` | `/api/v1/registrations/verify` | Verify attendee email |
+| `POST` | `/api/v1/registrations/resend` | Resend verification code |
+| `POST` | `/api/v1/check-in` | Check in attendee using QR token |
+| `GET` | `/api/v1/admin/stats` | Get event statistics |
+
+---
+
+# 🚀 Getting Started
+
+## Prerequisites
+
+- Android Studio
+- JDK 21
+- Android SDK
+- Running EventCheck backend
+- PostgreSQL
+- Docker Desktop (for backend dependencies)
+
+## Android
+
+Configure the API base URL according to your environment.
+
+For an Android emulator, if the backend is running locally on your computer, use:
+
+```text
 http://10.0.2.2:8080/
 ```
-> `localhost` inside the Android emulator refers to the emulator itself,
-> not your development machine.
-Build the User App
-``` bash
+
+> `10.0.2.2` allows the Android emulator to access the host machine's `localhost`.
+
+### Build User App
+
+```bash
 ./gradlew assembleUserDebug
 ```
-Build the Scanner App
-``` bash
+
+### Build Scanner App
+
+```bash
 ./gradlew assembleScannerDebug
 ```
-The exact Gradle variant name can vary depending on the configured
-flavor/build-type combination.
-🔐 Security Notes
-Email verification is required before issuing the attendee ticket.
-QR tokens are used for event check-in rather than relying only on
-attendee names.
-Duplicate check-ins are handled by the backend.
-Administrative statistics are exposed through dedicated backend
-endpoints.
-Production deployments should use HTTPS and secure environment-based
-configuration for credentials and secrets.
-📊 Attendance Statistics
-The scanner application provides an overview of the event, including:
-Total registrations
-Verified registrations
-Checked-in attendees
-Not checked-in attendees
-Attendance rate
-This allows event staff to monitor attendance without manually counting
-participants.
-🎯 Project Goals
-EventCheck was designed around a simple event workflow:
-Register → Verify → Receive QR Ticket → Scan → Check In → Track
-Attendance
-The goal is to reduce manual registration and check-in work while giving
-event organizers a clear view of attendance.
-👩‍💻 Project
-EventCheck --- Android event registration and QR-based attendance
-system.
-Built with Kotlin, Jetpack Compose, Hilt, Retrofit, CameraX, ML Kit,
-ZXing, Spring Boot, and PostgreSQL.
+
+---
+
+# 🔐 Backend
+
+The backend is responsible for:
+
+- Registration management.
+- Email verification.
+- QR token generation.
+- Attendee check-in.
+- Duplicate check-in validation.
+- Attendance statistics.
+
+The backend uses PostgreSQL for persistent data and Mailpit for local email testing during development.
+
+---
+
+# 📊 Attendance Statistics
+
+The scanner application provides event statistics such as:
+
+- Total registrations.
+- Verified attendees.
+- Checked-in attendees.
+- Remaining attendees.
+- Attendance rate.
+
+---
+
+# 🎯 Project Flow
+
+**Register → Verify Email → Receive QR Ticket → Scan QR → Check In → Track Attendance**
+
+EventCheck provides a simple digital workflow for managing event registration and attendance without relying on manual check-in.
+
+---
+
+## 👩‍💻 Project
+
+**EventCheck** — Android event registration and QR-based attendance management system.
+
+Built with **Kotlin, Jetpack Compose, Hilt, Retrofit, CameraX, ML Kit, ZXing, Spring Boot, and PostgreSQL**.
