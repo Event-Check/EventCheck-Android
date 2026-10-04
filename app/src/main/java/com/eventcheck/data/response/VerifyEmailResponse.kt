@@ -1,20 +1,18 @@
 package com.eventcheck.data.response
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class VerifyEmailResponse(
-    @SerialName("email")
+    @SerializedName("email")
     val email: String,
-    @SerialName("name")
+    @SerializedName("name")
     val name: String,
-    @SerialName("message")
+    @SerializedName("message")
     val message: String,
-    @SerialName("emailVerified")
+    @SerializedName("emailVerified")
     val isEmailVerified: Boolean,
-    @SerialName("id")
+    @SerializedName("id")
     val id: String,
-    @SerialName("qrToken")
+    @SerializedName("qrToken")
     val qrToken: String?,
 )

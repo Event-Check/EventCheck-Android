@@ -1,22 +1,20 @@
 package com.eventcheck.data.response
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class CheckInResponse(
-    @SerialName("checkedIn")
+    @SerializedName("checkedIn")
     val checkedIn: Boolean,
-    @SerialName("checkedInAt")
+    @SerializedName("checkedInAt")
     val checkedInAt: String?,
-    @SerialName("email")
+    @SerializedName("email")
     val email: String?,
-    @SerialName("message")
+    @SerializedName("message")
     val message: String,
-    @SerialName("name")
+    @SerializedName("name")
     val name: String?,
-    @SerialName("registrationId")
+    @SerializedName("registrationId")
     val registrationId: String?,
-    @SerialName("status")
+    @SerializedName("status")
     val status: String
 )

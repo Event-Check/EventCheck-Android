@@ -1,16 +1,14 @@
 package com.eventcheck.data.response
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class StatsResponse(
-    @SerialName("checkedIn")
+    @SerializedName("checkedIn")
     val checkedIn: Int,
-    @SerialName("notCheckedIn")
+    @SerializedName("notCheckedIn")
     val notCheckedIn: Int,
-    @SerialName("totalRegistrations")
+    @SerializedName("totalRegistrations")
     val totalRegistrations: Int,
-    @SerialName("verifiedRegistrations")
+    @SerializedName("verifiedRegistrations")
     val verifiedRegistrations: Int
 )
