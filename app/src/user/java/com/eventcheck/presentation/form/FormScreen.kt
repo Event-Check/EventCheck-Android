@@ -39,18 +39,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.eventcheck.R
 
-/**
- * Main form composable screen for user event registration.
- *
- * Displays input fields for name and email, validates form submission,
- * collects side-effects from [FormViewModel], and delegates navigation to [onNavigateToQr].
- *
- * @param onNavigateToQr Navigation callback triggered when registration succeeds.
- * @param viewModel Injectable [FormViewModel].
- */
 @Composable
 fun FormScreen(
-    onNavigateToQr: (name: String, email: String, registrationId: String) -> Unit = { _, _, _ -> },
+    onNavigateToVerify: (name: String, email: String, registrationId: String) -> Unit = { _, _, _ -> },
     viewModel: FormViewModel = hiltViewModel(),
 ) {
     val name by viewModel.name
@@ -61,12 +52,11 @@ fun FormScreen(
     val isLoading by viewModel.isLoading
     val generalError by viewModel.generalError
 
-    // Collect one-time UI side-effects from FormViewModel and delegate navigation
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is FormUiEffect.NavigateToQr -> {
-                    onNavigateToQr(effect.name, effect.email, effect.registrationId)
+                is FormUiEffect.NavigateToVerify -> {
+                    onNavigateToVerify(effect.name, effect.email, effect.registrationId)
                     viewModel.resetSuccessState()
                 }
             }
@@ -74,44 +64,36 @@ fun FormScreen(
     }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            FormScreenContent(
-                modifier = Modifier.padding(innerPadding),
-                name = name,
-                email = email,
-                nameError = nameError,
-                emailError = emailError,
-                isFormValid = isFormValid && !isLoading,
-                onNameChange = viewModel::onNameChange,
-                onEmailChange = viewModel::onEmailChange,
-                onSubmit = viewModel::submitForm,
+        FormScreenContent(
+            modifier = Modifier.padding(innerPadding),
+            name = name,
+            email = email,
+            nameError = nameError,
+            emailError = emailError,
+            isFormValid = isFormValid && !isLoading,
+            isLoading = isLoading,
+            onNameChange = viewModel::onNameChange,
+            onEmailChange = viewModel::onEmailChange,
+            onSubmit = viewModel::submitForm,
+        )
+
+        generalError?.let {
+            AlertDialog(
+                onDismissRequest = { viewModel.clearGeneralError() },
+                title = { Text(text = stringResource(R.string.error_title)) },
+                text = {
+                    Text(
+                        text = stringResource(
+                            generalError ?: R.string.error_unexpected,
+                        ),
+                    )
+                },
+                confirmButton = {
+                    TextButton(onClick = { viewModel.clearGeneralError() }) {
+                        Text(stringResource(R.string.ok))
+                    }
+                },
             )
-
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center),
-                    color = colorResource(R.color.user_button),
-                )
-            }
-
-            generalError?.let {
-                AlertDialog(
-                    onDismissRequest = { viewModel.clearGeneralError() },
-                    title = { Text(text = stringResource(R.string.error_title)) },
-                    text = {
-                        Text(
-                            text = stringResource(
-                                generalError ?: R.string.error_unexpected,
-                            ),
-                        )
-                    },
-                    confirmButton = {
-                        TextButton(onClick = { viewModel.clearGeneralError() }) {
-                            Text(stringResource(R.string.ok))
-                        }
-                    },
-                )
-            }
         }
     }
 }
@@ -123,6 +105,7 @@ private fun FormScreenContent(
     nameError: String?,
     emailError: String?,
     isFormValid: Boolean,
+    isLoading: Boolean,
     onNameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onSubmit: () -> Unit,
@@ -188,11 +171,19 @@ private fun FormScreenContent(
                 disabledContentColor = Color.White,
             ),
         ) {
-            Text(
-                text = stringResource(R.string.btn_submit),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-            )
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = Color.White,
+                    strokeWidth = 2.dp,
+                )
+            } else {
+                Text(
+                    text = stringResource(R.string.btn_submit),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
         }
     }
 }
@@ -259,6 +250,7 @@ private fun Preview() {
         nameError = null,
         emailError = null,
         isFormValid = false,
+        isLoading = false,
         onNameChange = {},
         onEmailChange = {},
         onSubmit = {},

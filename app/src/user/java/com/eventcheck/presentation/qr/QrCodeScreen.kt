@@ -31,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -49,11 +48,12 @@ fun QrCodeScreen(
     name: String,
     email: String,
     registrationId: String,
+    qrToken: String,
     onDone: () -> Unit,
     viewModel: QrCodeViewModel = hiltViewModel(),
 ) {
-    LaunchedEffect(name, email, registrationId) {
-        viewModel.setupData(name, email, registrationId)
+    LaunchedEffect(name, email, registrationId, qrToken) {
+        viewModel.setupData(name, email, registrationId, qrToken)
     }
 
     val qrCodeBitmap by viewModel.qrCodeBitmap

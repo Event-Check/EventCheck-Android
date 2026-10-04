@@ -23,12 +23,10 @@ class QrCodeViewModel @Inject constructor() : ViewModel() {
     private val _registrationId = mutableStateOf("")
     val registrationId: State<String> = _registrationId
 
-    fun setupData(name: String, email: String, registrationId: String) {
+    fun setupData(name: String, email: String, registrationId: String, qrToken: String) {
         _name.value = name
         _email.value = email
         _registrationId.value = registrationId
-
-        val qrPayload = registrationId.ifBlank { email }
-        _qrCodeBitmap.value = QrCodeGenerator.generateQrCode(qrPayload)
+        _qrCodeBitmap.value = QrCodeGenerator.generateQrCode(qrToken)
     }
 }

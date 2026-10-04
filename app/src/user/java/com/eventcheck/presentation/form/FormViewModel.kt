@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 
 sealed interface FormUiEffect {
-    data class NavigateToQr(
+    data class NavigateToVerify(
         val name: String,
         val email: String,
         val registrationId: String,
@@ -111,19 +111,14 @@ class FormViewModel @Inject constructor(
                 _generalError.value = null
                 _isSuccess.value = false
                 try {
-//                    val response = eventDatasource.register(_name.value.trim(), _email.value.trim())
-//                    val regName = response.name.ifBlank { _name.value.trim() }
-//                    val regEmail = response.email.ifBlank { _email.value.trim() }
-
-                    val regName = _name.value.trim()
-                    val regEmail =  _email.value.trim()
+                    val response = eventDatasource.register(_name.value.trim(), _email.value.trim())
 
                     _isSuccess.value = true
                     _effect.send(
-                        FormUiEffect.NavigateToQr(
-                            name = regName,
-                            email = regEmail,
-                            registrationId = "", //TODO add registration id
+                        FormUiEffect.NavigateToVerify(
+                            name = response.name.ifBlank { _name.value.trim() },
+                            email = response.email.ifBlank { _email.value.trim() },
+                            registrationId = response.id,
                         )
                     )
                 } catch (e: DataException) {
