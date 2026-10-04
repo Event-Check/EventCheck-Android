@@ -38,12 +38,13 @@ class StatsViewModel @Inject constructor(
                 val response = eventDatasource.getStats()
                 _stats.value = response
             } catch (e: DataException) {
-                _errorResId.value = when (e) {
-                    is DataException.NetworkError -> R.string.error_network
-                    else -> R.string.error_server_fallback
+                if (e is DataException.NetworkError) {
+                    _errorResId.value = R.string.error_network
+                } else {
+                    _stats.value = null
                 }
             } catch (_: Exception) {
-                _errorResId.value = R.string.error_unexpected
+                _stats.value = null
             } finally {
                 _isLoading.value = false
             }

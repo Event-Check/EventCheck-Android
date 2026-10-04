@@ -33,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.eventcheck.R
 import com.eventcheck.data.response.StatsResponse
 import com.eventcheck.presentation.stats.composable.AttendanceProgressCard
+import com.eventcheck.presentation.stats.composable.EmptyStatsState
 import com.eventcheck.presentation.stats.composable.StatsGrid
 import com.eventcheck.presentation.stats.composable.TopBar
 
@@ -69,12 +70,13 @@ private fun StatsScreenContent(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = modifier.fillMaxSize().background(colorResource(R.color.white))
+        modifier = modifier
+            .fillMaxSize()
+            .background(colorResource(R.color.white))
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
             TopBar(
@@ -83,27 +85,47 @@ private fun StatsScreenContent(
                 onBack = onBack
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            stats?.let { statsData ->
-                val attendanceRate = if (statsData.totalRegistrations > 0) {
-                    (statsData.checkedIn.toFloat() / statsData.totalRegistrations.toFloat())
-                } else 0f
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        color = colorResource(R.color.scanner_button)
+                    )
+                } else if (stats != null && stats.totalRegistrations > 0) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        val attendanceRate = (stats.checkedIn.toFloat() / stats.totalRegistrations.toFloat())
 
-                AttendanceProgressCard(attendanceRate)
-                Spacer(modifier = Modifier.height(16.dp))
-                StatsGrid(
-                    totalRegistrations = stats.totalRegistrations.toString(),
-                    verifiedRegistrations = stats.verifiedRegistrations.toString(),
-                    checkedIn = stats.checkedIn.toString(),
-                    notCheckedIn = (stats.totalRegistrations - stats.checkedIn).toString()
-                )
+                        AttendanceProgressCard(attendanceRate)
+                        Spacer(modifier = Modifier.height(16.dp))
+                        StatsGrid(
+                            totalRegistrations = stats.totalRegistrations.toString(),
+                            verifiedRegistrations = stats.verifiedRegistrations.toString(),
+                            checkedIn = stats.checkedIn.toString(),
+                            notCheckedIn = (stats.totalRegistrations - stats.checkedIn).toString()
+                        )
+                    }
+                } else {
+                    EmptyStatsState(
+                        modifier = Modifier.verticalScroll(rememberScrollState())
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = onFetchStatsClick,
+                enabled = !isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
@@ -121,37 +143,31 @@ private fun StatsScreenContent(
             }
         }
 
-        if (isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center),
-                color = colorResource(R.color.scanner_button)
-            )
-        }
-
-        errorResId?.let { resId ->
+        if (errorResId != null && stats != null && stats.totalRegistrations > 0) {
             AlertDialog(
                 onDismissRequest = clearError,
                 title = { Text(text = stringResource(R.string.error_title)) },
-                text = { Text(text = stringResource(resId)) },
+                text = { Text(text = stringResource(errorResId)) },
                 confirmButton = {
                     TextButton(onClick = clearError) {
                         Text(stringResource(R.string.ok))
                     }
-                })
+                }
+            )
         }
     }
 }
 
 @Preview
 @Composable
-private fun Preview(){
+private fun Preview() {
     StatsScreenContent(
         onBack = {},
         stats = StatsResponse(
-            totalRegistrations = 100,
-            verifiedRegistrations = 80,
-            checkedIn = 50,
-            notCheckedIn = 50
+            totalRegistrations = 2,
+            verifiedRegistrations = 0,
+            checkedIn = 0,
+            notCheckedIn = 0
         ),
         clearError = {},
         isLoading = false,
