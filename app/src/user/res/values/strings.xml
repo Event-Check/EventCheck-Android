@@ -19,4 +19,16 @@
     <string name="qr_screen_subtitle">Show this QR code at the event entrance for check-in.</string>
     <string name="qr_registration_id">Registration ID: %1$s</string>
     <string name="btn_done">Done</string>
+    <string name="verify_title">Verify Your Email</string>
+    <string name="verify_subtitle">We sent a 6-digit code to %1$s. It expires in 2 minutes.</string>
+    <string name="verify_code_placeholder">000000</string>
+    <string name="verify_didnt_receive">Didn\'t get the code?</string>
+    <string name="btn_verify">Verify</string>
+    <string name="btn_resend_code">Resend code</string>
+    <string name="resend_code_in">Resend in %1$ds</string>
+    <string name="verify_code_resent">A new code has been sent to your email.</string>
+    <string name="error_invalid_code">Invalid code. Please check it and try again.</string>
+    <string name="error_code_expired">This code has expired. Tap Resend code to get a new one.</string>
+    <string name="error_registration_not_found">Registration not found. Please go back and register again.</string>
+    <string name="error_already_verified">This email is already verified.</string>
 </resources>
