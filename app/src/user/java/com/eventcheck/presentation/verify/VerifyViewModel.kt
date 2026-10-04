@@ -61,7 +61,6 @@ class VerifyViewModel @Inject constructor(
 
     val isCodeComplete = derivedStateOf { _code.value.length == CODE_LENGTH }
 
-    /** Called once per visit. The code was just emailed, so the resend timer starts immediately. */
     fun setup(name: String, email: String, registrationId: String) {
         if (isInitialized && this.email == email) return
         reset()
@@ -72,7 +71,6 @@ class VerifyViewModel @Inject constructor(
         startResendCooldown()
     }
 
-    /** Clears everything so the next visit starts fresh. */
     fun reset() {
         cooldownJob?.cancel()
         isInitialized = false
