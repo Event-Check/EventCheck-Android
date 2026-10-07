@@ -2,8 +2,6 @@ package com.eventcheck.presentation.stats
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Environment
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -36,7 +34,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.eventcheck.R
 import com.eventcheck.data.response.StatsResponse
@@ -46,7 +43,6 @@ import com.eventcheck.presentation.stats.composable.ExportCard
 import com.eventcheck.presentation.stats.composable.ExportSuccessDialog
 import com.eventcheck.presentation.stats.composable.StatsGrid
 import com.eventcheck.presentation.stats.composable.TopBar
-import java.io.File
 
 @Composable
 fun StatsScreen(
@@ -80,7 +76,10 @@ fun StatsScreen(
             isLoading = isLoading || isExporting,
             exportedFile = exportedFile,
             errorResId = errorResId,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colorResource(R.color.white))
+                .padding(innerPadding)
         )
     }
 }
@@ -104,8 +103,6 @@ private fun StatsScreenContent(
 ) {
     Box(
         modifier = modifier
-            .fillMaxSize()
-            .background(colorResource(R.color.white))
     ) {
         Column(
             modifier = Modifier

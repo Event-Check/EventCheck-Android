@@ -61,6 +61,8 @@ fun MainScreen(onAnimationFinished: () -> Unit) {
             controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             onDispose {
                 controller.show(WindowInsetsCompat.Type.statusBars())
+                controller.isAppearanceLightStatusBars = true
+                controller.isAppearanceLightNavigationBars = true
             }
         }
     }
