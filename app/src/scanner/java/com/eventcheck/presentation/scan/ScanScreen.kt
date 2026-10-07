@@ -92,7 +92,10 @@ fun ScanScreen(
                 .padding(innerPadding)
         ) {
             ScanScreenContent(
-                onBack = onBack,
+                onBack = {
+                    viewModel.stopScanning()
+                    onBack()
+                },
                 hasCameraPermission = hasCameraPermission,
                 isScanning = isScanning,
                 isLoading = isLoading,
