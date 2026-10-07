@@ -6,15 +6,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eventcheck.R
 import com.eventcheck.data.DataException
-import com.eventcheck.data.EventDatasource
+import com.eventcheck.data.EventRepository
 import com.eventcheck.data.response.CheckInResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ScanViewModel @Inject constructor(
-    private val eventDatasource: EventDatasource
+    private val repository: EventRepository
 ) : ViewModel() {
 
     private val _isScanning = mutableStateOf(true)
@@ -32,7 +33,7 @@ class ScanViewModel @Inject constructor(
     private val _lastScannedCode = mutableStateOf<String?>(null)
 
     fun onQrScanned(qrToken: String) {
-        if (!_isScanning.value || _isLoading.value || qrToken == _lastScannedCode.value) return
+        if (!_isScanning.value || _isLoading.value || _checkInResult.value != null || qrToken == _lastScannedCode.value) return
 
         _lastScannedCode.value = qrToken
         _isScanning.value = false
@@ -41,7 +42,7 @@ class ScanViewModel @Inject constructor(
             _isLoading.value = true
             _errorResId.value = null
             try {
-                val response = eventDatasource.checkIn(qrToken)
+                val response = repository.checkIn(qrToken)
                 _checkInResult.value = response
             } catch (e: DataException) {
                 _errorResId.value = when (e) {
@@ -61,8 +62,21 @@ class ScanViewModel @Inject constructor(
     fun resetScanState() {
         _checkInResult.value = null
         _errorResId.value = null
-        _lastScannedCode.value = null
         _isScanning.value = true
+
+        // Debounce clearing lastScannedCode to avoid immediate duplicate scanning of the same physical QR code
+        viewModelScope.launch {
+            delay(2500L)
+            if (_checkInResult.value == null) {
+                _lastScannedCode.value = null
+            }
+        }
+    }
+
+    fun stopScanning() {
+        _isScanning.value = false
+        _checkInResult.value = null
+        _errorResId.value = null
     }
 
     fun clearError() {
