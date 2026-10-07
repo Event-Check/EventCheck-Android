@@ -7,4 +7,5 @@
     <color name="verified_color">#FF8B5CF6</color>
     <color name="check_in">#FFF59E0B</color>
     <color name = "progress_background">#FFF5F7F5</color>
+    <color name="export_card">#FFF7F9F8</color>
 </resources>

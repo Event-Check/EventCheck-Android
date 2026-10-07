@@ -20,6 +20,7 @@
     <string name="btn_refresh">Refresh Stats</string>
     <string name="btn_back">Back</string>
     <string name="error_title">Error</string>
+    <string name="success_title">Success</string>
     <string name="ok">OK</string>
     <string name="error_invalid_input">Invalid QR code token.</string>
     <string name="error_server_fallback">Server error occurred. Please try again.</string>
@@ -30,4 +31,20 @@
     <string name="label_dialog_id">ID: %1$s</string>
     <string name="empty_stats_title">No Statistics Available</string>
     <string name="empty_stats_subtitle">Event statistics will appear here once attendees register and check in.</string>
+    <string name="title_report_screen">Attendance Report</string>
+    <string name="subtitle_report_screen">View summary and export PDF or Excel report</string>
+    <string name="btn_show_report">Attendance Report</string>
+    <string name="report_registered">Registered</string>
+    <string name="report_verified">Verified</string>
+    <string name="report_checked_in">Checked In</string>
+    <string name="report_no_shows">No-Shows</string>
+    <string name="report_include_attendees">Include Attendee List in Report</string>
+    <string name="btn_export_pdf">Export PDF Report</string>
+    <string name="btn_export_excel">Export Excel Report</string>
+    <string name="msg_export_success">Report saved to Downloads: %1$s</string>
+    <string name="empty_report_title">No Report Data Available</string>
+    <string name="empty_report_subtitle">Attendance summary will appear here once attendees register.</string>
+    <string name="btn_open">Open</string>
+    <string name="btn_open_file">Open File</string>
+    <string name="msg_no_app_to_open">No application found to open this file.</string>
 </resources>
