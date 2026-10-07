@@ -1,6 +1,6 @@
 # EventCheck 🎟️
 
-EventCheck is an Android event registration and attendance management system built to simplify the complete event check-in process — from attendee registration and email verification to QR-based check-in and attendance statistics.
+EventCheck is an Android event registration and attendance management system built to simplify the complete event check-in process — from attendee registration and email verification to QR-based check-in, attendance statistics, and report exports.
 
 The project includes **two Android flavors in the same project**:
 
@@ -14,7 +14,7 @@ The project includes **two Android flavors in the same project**:
 ### 👤 User App
 
 - Register using name and email.
-- Verify email using a verification code.
+- Verify email using a 6-digit verification code.
 - Resend the verification code.
 - Generate a unique QR ticket after verification.
 - Display the attendee's event ticket and QR code.
@@ -22,11 +22,16 @@ The project includes **two Android flavors in the same project**:
 
 ### 📷 Scanner App
 
-- Scan attendee QR codes using the device camera.
+- Scan attendee QR codes using the device camera (CameraX + ML Kit).
 - Check attendees in through the backend.
-- Show the attendee's information and check-in result.
+- Show attendee name, email, and registration ID on scan.
 - Prevent duplicate check-ins.
-- View event attendance statistics.
+- View real-time event attendance statistics and progress.
+- **Export Attendance Reports**:
+  - Export report summary & attendee list in **PDF** or **Excel** (`.xlsx`) formats.
+  - Choose whether to include the detailed attendee list in exports.
+  - Saves reports directly to the device's public `Downloads` folder.
+  - **Open File Feature**: Launch and view exported PDF/Excel files instantly in external viewer apps via `FileProvider`.
 
 ---
 
@@ -51,7 +56,7 @@ QR Scan at Event
 Attendance Check-in
    │
    ▼
-Event Statistics
+Event Statistics & Export Report (PDF / Excel)
 ```
 
 ---
@@ -93,7 +98,7 @@ Event Statistics
 
 ## 📷 Scanner App
 
-### Scanner & Attendance
+### Scanner, Attendance & Reports
 
 <table>
   <tr>
@@ -104,22 +109,32 @@ Event Statistics
       <img src="https://github.com/user-attachments/assets/901f7d15-0a3a-4c3a-95b0-293e93dae1d4" width="200" alt="Scanner App - Scan 2" />
     </td>
     <td align="center" width="33%">
-      <img src="https://github.com/user-attachments/assets/108330b4-0ff9-4771-8539-b99bcc89662a" width="200" alt="Scanner App - Statistics" />
+      <img src="https://github.com/user-attachments/assets/c485b874-d636-44c7-ad40-0434ecfcc674"  width="200" alt="Scanner App - Statistics" />
+    </td>
+    <td align="center" width="33%">
+      <img src="https://github.com/user-attachments/assets/ae42c5e0-e56c-475d-b4d8-6c6ec36fc0ec"   width="200" alt="Scanner App - Success" />
     </td>
   </tr>
 </table>
 
 ---
 
-# 📊 Attendance Statistics
+# 📊 Attendance Statistics & Export Reports
 
-The scanner application provides event statistics such as:
+The scanner application provides comprehensive attendance analytics and export capabilities:
 
-- Total registrations.
-- Verified attendees.
-- Checked-in attendees.
-- Remaining attendees.
-- Attendance rate.
+- **Real-Time Overview**:
+  - Total registrations.
+  - Verified attendees.
+  - Checked-in attendees.
+  - No-shows / remaining attendees.
+  - Attendance rate percentage.
+
+- **Report Export System**:
+  - **PDF Export**: Generates a clean PDF document containing attendance summary and attendee details.
+  - **Excel Export**: Generates a multi-sheet `.xlsx` spreadsheet (`Summary` sheet + `Attendees` sheet).
+  - **Include Attendees Toggle**: Option to toggle inclusion of full attendee table in reports.
+  - **Instant File Viewer**: Success dialog with an **"Open File"** button to launch PDF/Excel viewers via `FileProvider`.
 
 ---
 
@@ -128,15 +143,17 @@ The scanner application provides event statistics such as:
 - Kotlin
 - Jetpack Compose
 - Material 3
-- Hilt
-- Retrofit
+- Hilt (Dependency Injection)
+- Retrofit & OkHttp
+- HttpLoggingInterceptor
 - Gson
 - CameraX
 - ML Kit Barcode Scanning
-- ZXing
+- ZXing (QR Generator)
 - Navigation 3
-- Kotlin Coroutines
-- ViewModel
+- FileProvider & MediaStore API
+- Kotlin Coroutines & Flow
+- ViewModel Architecture
 
 ---
 
@@ -146,15 +163,28 @@ Both applications are maintained in the same Android project using product flavo
 
 | Flavor | Purpose |
 |---|---|
-| `user` | Attendee registration, email verification, and QR ticket |
-| `scanner` | QR scanning, check-in, and attendance statistics |
+| `user` | Attendee registration, email verification, and QR ticket display |
+| `scanner` | QR scanning, check-in, attendance statistics, and PDF/Excel report exports |
 
 This allows the two applications to share common project infrastructure while keeping their user experiences separate.
 
 ---
 
-## API
-The app talks to the [EventCheck Backend](https://github.com/Event-Check/EventCheck-Backend). See the backend README for the full API documentation.
+## 🌐 API Overview
+
+The app communicates with the [EventCheck Backend](https://github.com/Event-Check/EventCheck-Backend). 
+
+### Main Endpoints
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| `POST` | `/api/v1/registrations` | Public | Register new attendee |
+| `POST` | `/api/v1/registrations/verify` | Public | Verify email code & return `qrToken` |
+| `POST` | `/api/v1/registrations/resend-verification` | Public | Resend verification email |
+| `POST` | `/api/v1/check-in` | Admin | Validate QR token and mark attendance |
+| `GET` | `/api/v1/admin/stats` | Admin | Fetch real-time attendance counts |
+| `GET` | `/api/v1/admin/report/summary` | Admin | Fetch dashboard summary numbers |
+| `GET` | `/api/v1/admin/report/export` | Admin | Download PDF or Excel report file (`format=pdf\|excel`) |
 
 ---
 
@@ -169,11 +199,11 @@ The app talks to the [EventCheck Backend](https://github.com/Event-Check/EventCh
 - PostgreSQL
 - Docker Desktop (for backend dependencies)
 
-## Android
+## Android Setup
 
 Set the API base URL in `AppModule.kt` according to your environment.
 
-**Android emulator** (backend running on your computer):
+**Android Emulator** (backend running on your computer):
 
 ```text
 http://10.0.2.2:8080/api/v1/
@@ -181,7 +211,19 @@ http://10.0.2.2:8080/api/v1/
 
 > `10.0.2.2` allows the Android emulator to access the host machine's `localhost`.
 
-**Physical phone** (same Wi-Fi as your computer):
+**Physical Phone with ADB Port Forwarding**:
+
+```bash
+adb reverse tcp:8080 tcp:8080
+```
+
+Set URL in `AppModule.kt`:
+
+```text
+http://127.0.0.1:8080/api/v1/
+```
+
+**Physical Phone via Wi-Fi**:
 
 ```text
 http://<your-computer-wifi-ip>:8080/api/v1/
