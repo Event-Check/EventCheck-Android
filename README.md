@@ -102,17 +102,17 @@ Event Statistics & Export Report (PDF / Excel)
 
 <table>
   <tr>
-    <td align="center" width="33%">
-      <img src="https://github.com/user-attachments/assets/c58cf434-bf6f-457c-a815-44a928c3b81c" width="200" alt="Scanner App - Scan 1" />
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/c58cf434-bf6f-457c-a815-44a928c3b81c" width="180" alt="Scanner App - Scan 1" />
     </td>
-    <td align="center" width="33%">
-      <img src="https://github.com/user-attachments/assets/901f7d15-0a3a-4c3a-95b0-293e93dae1d4" width="200" alt="Scanner App - Scan 2" />
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/901f7d15-0a3a-4c3a-95b0-293e93dae1d4" width="180" alt="Scanner App - Scan 2" />
     </td>
-    <td align="center" width="33%">
-      <img src="https://github.com/user-attachments/assets/c485b874-d636-44c7-ad40-0434ecfcc674"  width="200" alt="Scanner App - Statistics" />
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/c485b874-d636-44c7-ad40-0434ecfcc674" width="180" alt="Scanner App - Statistics" />
     </td>
-    <td align="center" width="33%">
-      <img src="https://github.com/user-attachments/assets/ae42c5e0-e56c-475d-b4d8-6c6ec36fc0ec"   width="200" alt="Scanner App - Success" />
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/ae42c5e0-e56c-475d-b4d8-6c6ec36fc0ec" width="180" alt="Scanner App - Success" />
     </td>
   </tr>
 </table>
