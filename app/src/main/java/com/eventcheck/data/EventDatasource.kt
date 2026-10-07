@@ -6,9 +6,11 @@ import com.eventcheck.data.request.ResendCodeRequest
 import com.eventcheck.data.request.VerifyEmailRequest
 import com.eventcheck.data.response.CheckInResponse
 import com.eventcheck.data.response.RegistrationResponse
+import com.eventcheck.data.response.ReportSummaryResponse
 import com.eventcheck.data.response.StatsResponse
 import com.eventcheck.data.response.VerifyEmailResponse
 import com.google.gson.JsonParser
+import okhttp3.ResponseBody
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -56,6 +58,14 @@ class EventDatasource @Inject constructor(
 
     suspend fun getStats(): StatsResponse {
         return handleApiCall(::mapDefaultError) { apiService.getStats() }
+    }
+
+    suspend fun getReportSummary(): ReportSummaryResponse {
+        return handleApiCall(::mapDefaultError) { apiService.getReportSummary() }
+    }
+
+    suspend fun exportReport(format: String, includeAttendees: Boolean = true): ResponseBody {
+        return handleApiCall(::mapDefaultError) { apiService.exportReport(format, includeAttendees) }
     }
 
     private suspend fun <T> handleApiCall(
