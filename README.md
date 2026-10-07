@@ -109,10 +109,10 @@ Event Statistics & Export Report (PDF / Excel)
       <img src="https://github.com/user-attachments/assets/901f7d15-0a3a-4c3a-95b0-293e93dae1d4" width="180" alt="Scanner App - Scan 2" />
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/c485b874-d636-44c7-ad40-0434ecfcc674" width="180" alt="Scanner App - Statistics" />
+      <img src="https://github.com/user-attachments/assets/837ed338-d1c4-4d0d-862d-13d6a6c566e5"  width="180" alt="Scanner App - Statistics" />
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/ae42c5e0-e56c-475d-b4d8-6c6ec36fc0ec" width="180" alt="Scanner App - Success" />
+      <img src="https://github.com/user-attachments/assets/cef9bbe2-4280-45be-b526-64fc4ba47ebe" width="180" alt="Scanner App - Success" />
     </td>
   </tr>
 </table>
