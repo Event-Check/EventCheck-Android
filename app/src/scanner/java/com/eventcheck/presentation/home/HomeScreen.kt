@@ -113,7 +113,7 @@ private fun ActionCard(
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (isPrimary) Color(0xFFF2F7F4) else Color(0xFFFAFAFA)
+            containerColor = if (isPrimary) colorResource(R.color.primary_card) else colorResource(R.color.card_background)
         )
     ) {
         Column(

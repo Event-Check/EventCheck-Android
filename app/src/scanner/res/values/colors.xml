@@ -8,4 +8,5 @@
     <color name="check_in">#FFF59E0B</color>
     <color name = "progress_background">#FFF5F7F5</color>
     <color name="export_card">#FFF7F9F8</color>
+    <color name= "primary_card">#FFF2F7F4</color>
 </resources>
